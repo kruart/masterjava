@@ -1,8 +1,11 @@
 package ru.javaops.masterjava.matrix;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class MatrixUtil {
 
@@ -11,6 +14,46 @@ public class MatrixUtil {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
+        class MatrixColumn {
+            private final int column;
+            private final int[] columnByRow;
+
+             private MatrixColumn(int column, int[] columnByRow) {
+                this.column = column;
+                this.columnByRow = columnByRow;
+            }
+        }
+
+        List<Future<MatrixColumn>> futures = new ArrayList<>();
+
+        for (int i = 0; i < matrixSize; i++) {
+            final int col = i;
+            final int[] thatColumn = new int[matrixSize];
+            for (int k = 0; k < matrixSize; k++) {
+                thatColumn[k] = matrixB[k][i];
+            }
+
+            futures.add(executor.submit(() -> {
+                final int[] columnC = new int[matrixSize];
+
+                for (int row = 0; row < matrixSize; row++) {
+                    final int[] thisRow = matrixA[row];
+                    int sum = 0;
+                    for (int k = 0; k < matrixSize; k++) {
+                        sum += thisRow[k] * thatColumn[k];
+                    }
+                    columnC[row] = sum;
+                }
+                return new MatrixColumn(col, columnC);
+            }));
+        }
+
+        for (int i = 0; i < matrixSize; i++) {
+            MatrixColumn columnFuture = futures.get(i).get();
+            for (int j = 0; j < matrixSize; j++) {
+                matrixC[j][columnFuture.column] = columnFuture.columnByRow[j];
+            }
+        }
         return matrixC;
     }
 
