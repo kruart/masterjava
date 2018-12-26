@@ -1,41 +1,38 @@
 package ru.javaops.masterjava.xml.util;
 
 import com.google.common.io.Resources;
-import ru.javaops.masterjava.xml.schema.*;
+import ru.javaops.masterjava.xml.schema.Group;
+import ru.javaops.masterjava.xml.schema.ObjectFactory;
+import ru.javaops.masterjava.xml.schema.Payload;
 
-import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class MainXml {
-    private static InputStream input;
 
-    static {
-        try {
-            input = Resources.getResource("payload.xml").openStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private static InputStream getInput(String project) throws IOException {
+        return Resources.getResource("payload.xml").openStream();
     }
 
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         String projectName = sc.nextLine();
 
-        getContentsByProjectJAXBVersion(projectName).forEach(u -> System.out.println(u.getFullName() + " " + u.getEmail()));
+        getContentsByProjectJAXBVersion(projectName);
+        getContentsByProjectStAXVersion(projectName);
 
-        input.close();
     }
 
-    private static List<User> getContentsByProjectJAXBVersion(String projectName) throws JAXBException {
+    private static void getContentsByProjectJAXBVersion(String projectName) throws Exception {
         JaxbParser parser = new JaxbParser(ObjectFactory.class);
         parser.setSchema(Schemas.ofClasspath("payload.xsd"));
 
+        InputStream input = getInput(projectName);
         Payload payload = parser.unmarshal(input);
-        return payload.getUsers().getUser().stream().filter(u -> {
+        payload.getUsers().getUser().stream().filter(u -> {
             for (Object group : u.getGroups()) {
                 Group g = (Group)group;
 //                if (g.getType() == GroupType.CURRENT && g.getGroupName().equals(projectName)) {
@@ -44,6 +41,31 @@ public class MainXml {
                 }
             }
             return false;
-        }).collect(Collectors.toList());
+        }).forEach(u -> System.out.println(u.getFullName() + " " + u.getEmail()));
+
+        input.close();
+    }
+
+    private static void getContentsByProjectStAXVersion(String projectName) throws Exception {
+        InputStream input = getInput(projectName);
+        try (StaxStreamProcessor processor = new StaxStreamProcessor(input)) {
+            XMLStreamReader reader = processor.getReader();
+
+            while (reader.hasNext()) {
+                int event = reader.next();
+                if (event == XMLEvent.START_ELEMENT) {
+                    if ("User".equals(reader.getLocalName()) && reader.getAttributeValue(3).contains(projectName)) {
+
+                        while (reader.hasNext()) {
+                            event = reader.next();
+                            if (event == XMLEvent.START_ELEMENT && "fullName".equals(reader.getLocalName())) {
+                                System.out.println(reader.getElementText());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        input.close();
     }
 }

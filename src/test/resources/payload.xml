@@ -20,7 +20,6 @@
     <Projects>
         <Project name="topjava">
             <description>Spring Security Project</description>
-
                 <Group groupName="topjava01" type="FINISHED"/>
                 <Group groupName="topjava02" type="CURRENT"/>
                 <Group groupName="topjava03" type="REGISTERING"/>
