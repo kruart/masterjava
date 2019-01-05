@@ -1,6 +1,8 @@
 package ru.javaops.masterjava.upload;
 
 import org.thymeleaf.context.WebContext;
+import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.persist.model.User;
 
 import javax.servlet.ServletException;
@@ -21,6 +23,7 @@ import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
 public class UploadServlet extends HttpServlet {
 
     private final UserProcessor userProcessor = new UserProcessor();
+    private static final UserDao userDao = DBIProvider.getDao(UserDao.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,11 +38,17 @@ public class UploadServlet extends HttpServlet {
         try {
 //            http://docs.oracle.com/javaee/6/tutorial/doc/glraq.html
             Part filePart = req.getPart("fileToUpload");
+            int batchSize = Integer.parseInt(req.getParameter("chunk"));
             if (filePart.getSize() == 0) {
-                throw new IllegalStateException("Upload file have not been selected");
+                throwEx("Upload file have not been selected");
+            }
+            if (batchSize < 1) {
+                throwEx("Batch size must be greater or equals to 1");
             }
             try (InputStream is = filePart.getInputStream()) {
                 List<User> users = userProcessor.process(is);
+                userDao.insertUsers(users, batchSize);
+
                 webContext.setVariable("users", users);
                 engine.process("result", webContext, resp.getWriter());
             }
@@ -47,5 +56,9 @@ public class UploadServlet extends HttpServlet {
             webContext.setVariable("exception", e);
             engine.process("exception", webContext, resp.getWriter());
         }
+    }
+
+    private void throwEx(String message) {
+        throw new IllegalStateException(message);
     }
 }
