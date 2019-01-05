@@ -28,6 +28,7 @@ public class UploadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
+        webContext.setVariable("users", userDao.getWithLimit(20));
         engine.process("upload", webContext, resp.getWriter());
     }
 

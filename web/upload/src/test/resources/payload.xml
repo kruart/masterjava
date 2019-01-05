@@ -26,6 +26,24 @@
         <User flag="deleted" city="spb" email="deleted@yandex.ru">Davids</User>
         <User flag="active" city="mow" email="user1@gmail.com" groupRefs="masterjava01 topjava06">Buffon</User>
         <User flag="active" city="kiv" email="user2@yandex.ru" groupRefs="masterjava01">Trezeguet</User>
-        <User flag="active" city="mnsk" email="user3@yandex.ru" groupRefs="masterjava01">Zidane</User>
+        <User flag="active" city="mnsk" email="user3@yandex.ru" groupRefs="topjava08">Zidane</User>
+        <User flag="active" city="mnsk" email="user4@yandex.ru" groupRefs="masterjava01">Nedved</User>
+        <User flag="active" city="mnsk" email="user5@yandex.ru" groupRefs="topjava07">Figu</User>
+        <User flag="active" city="mnsk" email="user6@yandex.ru" groupRefs="topjava07 topjava08">Ronaldo</User>
+        <User flag="active" city="mnsk" email="user7@yandex.ru" groupRefs="masterjava01">Badgo</User>
+        <User flag="active" city="mnsk" email="user8@yandex.ru" groupRefs="topjava06 masterjava01">Totti</User>
+        <User flag="active" city="mnsk" email="user9@yandex.ru" groupRefs="topjava06">Maldini</User>
+        <User flag="active" city="mnsk" email="userio1@yandex.ru" groupRefs="topjava06">Can</User>
+        <User flag="active" city="mnsk" email="userio2@yandex.ru" groupRefs="topjava06">Nesta</User>
+        <User flag="active" city="mnsk" email="userio3@yandex.ru" groupRefs="topjava06">Buffon</User>
+        <User flag="active" city="mnsk" email="userio4@yandex.ru" groupRefs="topjava06">Batistuta</User>
+        <User flag="active" city="mnsk" email="userio5@yandex.ru" groupRefs="topjava06">Salgado</User>
+        <User flag="active" city="mnsk" email="userio6@yandex.ru" groupRefs="topjava06">Cafu</User>
+        <User flag="active" city="mnsk" email="userio7@yandex.ru" groupRefs="topjava06">Camoranezi</User>
+        <User flag="active" city="mnsk" email="userio8@yandex.ru" groupRefs="topjava06">Rui Costa</User>
+        <User flag="active" city="mnsk" email="userio9@yandex.ru" groupRefs="topjava06">Seniori</User>
+        <User flag="active" city="mnsk" email="player1@yandex.ru" groupRefs="topjava06">Cannavaro</User>
+        <User flag="active" city="mnsk" email="player2@yandex.ru" groupRefs="topjava06">Vieri</User>
+        <User flag="active" city="mnsk" email="player3@yandex.ru" groupRefs="topjava06">Recoba</User>
     </Users>
 </Payload>
